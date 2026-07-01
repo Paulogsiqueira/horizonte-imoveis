@@ -116,8 +116,16 @@ function closeForm() { el('formModal').hidden = true; document.body.style.overfl
 document.querySelectorAll('[data-close-form]').forEach((b) => b.addEventListener('click', closeForm));
 el('newBtn').addEventListener('click', () => openForm(null));
 
+const MAX_FOTOS = 6;
 el('pFotos').addEventListener('change', (e) => {
-  newFiles.push(...Array.from(e.target.files));
+  const restantes = MAX_FOTOS - (existingPhotos.length + newFiles.length);
+  const arquivos = Array.from(e.target.files);
+  if (restantes <= 0) {
+    toast(`Limite de ${MAX_FOTOS} fotos por imóvel atingido.`, true);
+  } else {
+    if (arquivos.length > restantes) toast(`Máximo de ${MAX_FOTOS} fotos — adicionadas apenas ${restantes}.`, true);
+    newFiles.push(...arquivos.slice(0, restantes));
+  }
   e.target.value = '';
   renderThumbs();
 });
@@ -128,6 +136,7 @@ function renderThumbs() {
   box.innerHTML = ex.concat(nv).join('');
   box.querySelectorAll('[data-ex]').forEach((t) => t.addEventListener('click', () => { existingPhotos.splice(+t.dataset.ex, 1); renderThumbs(); }));
   box.querySelectorAll('[data-nv]').forEach((t) => t.addEventListener('click', () => { newFiles.splice(+t.dataset.nv, 1); renderThumbs(); }));
+  el('pFotos').disabled = (existingPhotos.length + newFiles.length) >= 6;
 }
 
 async function uploadNew() {

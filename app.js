@@ -70,8 +70,10 @@ function applyFilters() {
 function openDetail(id) {
   const p = todos.find((x) => String(x.id) === String(id));
   if (!p) return;
-  const fotos = (p.fotos && p.fotos.length ? p.fotos : ['https://images.unsplash.com/photo-1568605114967-8130f3a36994?auto=format&fit=crop&w=1000&q=80']);
-  const side = fotos.slice(1, 3).map((f) => `<img src="${esc(f)}" alt="" />`).join('') || '';
+  const fotos = (p.fotos && p.fotos.length ? p.fotos : ['https://images.unsplash.com/photo-1568605114967-8130f3a36994?auto=format&fit=crop&w=1000&q=80']).slice(0, 6);
+  const thumbs = fotos.length > 1
+    ? `<div class="gallery-thumbs">${fotos.map((f, i) => `<button type="button" class="gthumb${i === 0 ? ' active' : ''}" data-src="${esc(f)}"><img src="${esc(f)}" alt="" loading="lazy" /></button>`).join('')}</div>`
+    : '';
   const feats = [];
   if (p.quartos) feats.push(`<span>${icnBed}${p.quartos} quarto(s)</span>`);
   if (p.banheiros) feats.push(`<span>${icnBath}${p.banheiros} banheiro(s)</span>`);
@@ -79,9 +81,9 @@ function openDetail(id) {
   if (p.area) feats.push(`<span>${icnArea}${p.area} m²</span>`);
   const wpp = `https://wa.me/5511900000000?text=${encodeURIComponent('Olá! Tenho interesse no imóvel: ' + p.titulo)}`;
   el('modalBody').innerHTML = `
-    <div class="modal-gallery">
-      <img src="${esc(fotos[0])}" alt="${esc(p.titulo)}" />
-      ${side ? `<div class="mg-side">${side}</div>` : ''}
+    <div class="detail-gallery">
+      <div class="gallery-main"><img id="galMain" src="${esc(fotos[0])}" alt="${esc(p.titulo)}" /></div>
+      ${thumbs}
     </div>
     <div class="modal-content">
       <span class="card-tag tag-${p.finalidade}" style="position:static;display:inline-block;margin-bottom:.6rem">${p.finalidade === 'venda' ? 'Venda' : 'Aluguel'}</span>
@@ -92,6 +94,14 @@ function openDetail(id) {
       <p class="modal-desc">${esc(p.descricao) || 'Sem descrição.'}</p>
       <a class="btn btn-gold" href="${wpp}" target="_blank" rel="noopener">Falar com o corretor no WhatsApp</a>
     </div>`;
+  const main = document.getElementById('galMain');
+  document.querySelectorAll('#modalBody .gthumb').forEach((btn) =>
+    btn.addEventListener('click', () => {
+      if (main) main.src = btn.dataset.src;
+      document.querySelectorAll('#modalBody .gthumb').forEach((b) => b.classList.remove('active'));
+      btn.classList.add('active');
+    })
+  );
   el('detailModal').hidden = false;
   document.body.style.overflow = 'hidden';
 }
