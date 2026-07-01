@@ -4,8 +4,8 @@
 //  Supabase → Project Settings → API
 //  (A "anon key" é pública e pode ficar aqui com segurança.)
 // ============================================================
-export const SUPABASE_URL = 'https://SEU-PROJETO.supabase.co';
-export const SUPABASE_ANON_KEY = 'SUA-ANON-KEY';
+export const SUPABASE_URL = 'https://ttbizrvqgkzwozpyqgpk.supabase.co';
+export const SUPABASE_ANON_KEY = 'sb_publishable_jxfXl8fKbwJCs5CnBQTOXA_64GC8V4s';
 
 // Nome do bucket de Storage onde ficam as fotos dos imóveis
 export const BUCKET = 'imoveis';
