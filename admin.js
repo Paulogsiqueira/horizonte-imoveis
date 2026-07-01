@@ -5,6 +5,7 @@ const el = (id) => document.getElementById(id);
 const brl = (n) => Number(n || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 });
 const esc = (s) => String(s ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 const TIPOS = { apartamento: 'Apartamento', casa: 'Casa', terreno: 'Terreno', comercial: 'Comercial' };
+const MAX_FOTOS = 6;
 
 function toast(msg, err = false) {
   const t = el('toast');
@@ -15,48 +16,41 @@ function toast(msg, err = false) {
 if (!isConfigured()) {
   document.body.innerHTML = '<div style="max-width:520px;margin:12vh auto;padding:2rem;text-align:center;font-family:Inter,sans-serif;color:#12263a">' +
     '<h1 style="font-family:Sora,sans-serif">Configuração pendente</h1>' +
-    '<p style="color:#5f7183">Preencha <b>SUPABASE_URL</b> e <b>SUPABASE_ANON_KEY</b> no arquivo <code>config.js</code> para usar o painel.</p>' +
+    '<p style="color:#5f7183">Preencha <b>SUPABASE_URL</b> e <b>SUPABASE_ANON_KEY</b> no arquivo <code>config.js</code>.</p>' +
     '<a href="index.html" style="color:#1f4e79">← Voltar ao site</a></div>';
   throw new Error('Supabase não configurado');
 }
 
 const supa = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-// ===== estado do formulário =====
-let existingPhotos = []; // URLs já salvas
-let newFiles = [];       // File[] novos
+// estado do formulário
+let existingPhotos = [];
+let newFiles = [];
 
-// ===== sessão =====
-async function boot() {
+// ===== guarda de sessão (redireciona se não logado) =====
+(async () => {
   const { data: { session } } = await supa.auth.getSession();
-  showApp(session);
-  supa.auth.onAuthStateChange((_e, s) => showApp(s));
-}
-function showApp(session) {
-  const logged = !!session;
-  el('loginView').hidden = logged;
-  el('panelView').hidden = !logged;
-  if (logged) { el('whoami').textContent = session.user.email; loadList(); }
-}
-
-// ===== login / logout =====
-el('loginForm').addEventListener('submit', async (e) => {
-  e.preventDefault();
-  el('loginError').textContent = '';
-  el('loginBtn').disabled = true; el('loginBtn').textContent = 'Entrando…';
-  const { error } = await supa.auth.signInWithPassword({ email: el('email').value.trim(), password: el('senha').value });
-  el('loginBtn').disabled = false; el('loginBtn').textContent = 'Entrar';
-  if (error) el('loginError').textContent = 'E-mail ou senha inválidos.';
-});
+  if (!session) { location.replace('login.html'); return; }
+  el('whoami').textContent = session.user.email;
+  el('panelView').hidden = false;
+  loadList();
+})();
+supa.auth.onAuthStateChange((_e, s) => { if (!s) location.replace('login.html'); });
 el('logoutBtn').addEventListener('click', () => supa.auth.signOut());
 
-// ===== listagem =====
+// ===== listagem + estatísticas =====
 async function loadList() {
   const box = el('adminList');
   box.innerHTML = '<div class="state"><div class="spinner"></div>Carregando…</div>';
   const { data, error } = await supa.from('properties').select('*').order('created_at', { ascending: false });
   if (error) { box.innerHTML = `<div class="admin-empty">Erro: ${esc(error.message)}</div>`; return; }
+
+  el('stTotal').textContent = data.length;
+  el('stVenda').textContent = data.filter((p) => p.finalidade === 'venda').length;
+  el('stAluguel').textContent = data.filter((p) => p.finalidade === 'aluguel').length;
+  el('stDestaque').textContent = data.filter((p) => p.destaque).length;
   el('adminCount').textContent = `${data.length} imóvel(is) cadastrado(s)`;
+
   if (!data.length) { box.innerHTML = '<div class="admin-empty">Nenhum imóvel ainda. Clique em <b>+ Novo imóvel</b> para começar.</div>'; return; }
   box.innerHTML = data.map(rowHTML).join('');
   box.querySelectorAll('[data-edit]').forEach((b) => b.addEventListener('click', () => openForm(data.find((p) => String(p.id) === b.dataset.edit))));
@@ -116,7 +110,6 @@ function closeForm() { el('formModal').hidden = true; document.body.style.overfl
 document.querySelectorAll('[data-close-form]').forEach((b) => b.addEventListener('click', closeForm));
 el('newBtn').addEventListener('click', () => openForm(null));
 
-const MAX_FOTOS = 6;
 el('pFotos').addEventListener('change', (e) => {
   const restantes = MAX_FOTOS - (existingPhotos.length + newFiles.length);
   const arquivos = Array.from(e.target.files);
@@ -136,7 +129,7 @@ function renderThumbs() {
   box.innerHTML = ex.concat(nv).join('');
   box.querySelectorAll('[data-ex]').forEach((t) => t.addEventListener('click', () => { existingPhotos.splice(+t.dataset.ex, 1); renderThumbs(); }));
   box.querySelectorAll('[data-nv]').forEach((t) => t.addEventListener('click', () => { newFiles.splice(+t.dataset.nv, 1); renderThumbs(); }));
-  el('pFotos').disabled = (existingPhotos.length + newFiles.length) >= 6;
+  el('pFotos').disabled = (existingPhotos.length + newFiles.length) >= MAX_FOTOS;
 }
 
 async function uploadNew() {
@@ -192,7 +185,6 @@ el('propForm').addEventListener('submit', async (e) => {
 // ===== excluir =====
 async function remove(p) {
   if (!confirm(`Excluir o imóvel "${p.titulo}"? Essa ação não pode ser desfeita.`)) return;
-  // remove fotos do storage (best-effort)
   try {
     const marker = `/storage/v1/object/public/${BUCKET}/`;
     const paths = (p.fotos || []).filter((u) => u.includes(marker)).map((u) => decodeURIComponent(u.split(marker)[1]));
@@ -205,4 +197,3 @@ async function remove(p) {
 }
 
 document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeForm(); });
-boot();

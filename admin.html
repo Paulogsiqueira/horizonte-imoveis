@@ -13,27 +13,6 @@
   <link rel="stylesheet" href="admin.css" />
 </head>
 <body class="admin">
-  <!-- LOGIN -->
-  <section class="login-wrap" id="loginView" hidden>
-    <form class="login-card" id="loginForm">
-      <div class="brand" style="justify-content:center;margin-bottom:1.2rem">
-        <svg class="logo-mark" width="40" height="40" viewBox="0 0 48 48" aria-hidden="true">
-          <rect width="48" height="48" rx="11" fill="#1f4e79"/>
-          <path d="M13 25 L24 15 L35 25" fill="none" stroke="#d9a441" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
-          <path d="M16 24 V34 H32 V24" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-      </div>
-      <h1>Área do corretor</h1>
-      <p class="login-sub">Entre para gerenciar os imóveis</p>
-      <label>E-mail<input type="email" id="email" required placeholder="corretor@horizonte.com" /></label>
-      <label>Senha<input type="password" id="senha" required placeholder="••••••••" /></label>
-      <button type="submit" class="btn btn-primary" id="loginBtn">Entrar</button>
-      <p class="login-error" id="loginError"></p>
-      <a href="index.html" class="login-back">← Voltar ao site</a>
-    </form>
-  </section>
-
-  <!-- PAINEL -->
   <div id="panelView" hidden>
     <header class="admin-top">
       <div class="container admin-top-inner">
@@ -43,23 +22,35 @@
             <path d="M13 25 L24 15 L35 25" fill="none" stroke="#d9a441" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
             <path d="M16 24 V34 H32 V24" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
-          <span class="brand-text"><strong>Horizonte</strong><small>Painel</small></span>
+          <span class="brand-text"><strong>Horizonte</strong><small>Painel do corretor</small></span>
         </a>
         <div class="admin-top-actions">
           <span class="admin-user" id="whoami"></span>
-          <a href="index.html" class="btn btn-ghost btn-sm">Ver site</a>
+          <a href="index.html" class="btn btn-ghost btn-sm" target="_blank">Ver site ↗</a>
           <button class="btn btn-ghost btn-sm" id="logoutBtn">Sair</button>
         </div>
       </div>
     </header>
 
     <main class="container admin-main">
-      <div class="admin-head">
+      <div class="admin-greeting">
         <div>
-          <h1>Imóveis</h1>
-          <p class="muted" id="adminCount"></p>
+          <p class="eyebrow">Bem-vindo de volta 👋</p>
+          <h1>Gestão de imóveis</h1>
         </div>
         <button class="btn btn-primary" id="newBtn">+ Novo imóvel</button>
+      </div>
+
+      <div class="stats">
+        <div class="stat stat-total"><div class="stat-ico">🏠</div><div><strong id="stTotal">—</strong><small>Total de imóveis</small></div></div>
+        <div class="stat stat-venda"><div class="stat-ico">🔖</div><div><strong id="stVenda">—</strong><small>À venda</small></div></div>
+        <div class="stat stat-aluguel"><div class="stat-ico">🔑</div><div><strong id="stAluguel">—</strong><small>Para alugar</small></div></div>
+        <div class="stat stat-destaque"><div class="stat-ico">⭐</div><div><strong id="stDestaque">—</strong><small>Em destaque</small></div></div>
+      </div>
+
+      <div class="admin-list-head">
+        <h2>Todos os imóveis</h2>
+        <p class="muted" id="adminCount"></p>
       </div>
       <div id="adminList" class="admin-list"></div>
     </main>
@@ -82,7 +73,7 @@
             <select id="pTipo"><option value="apartamento">Apartamento</option><option value="casa">Casa</option><option value="terreno">Terreno</option><option value="comercial">Comercial</option></select>
           </label>
           <label>Preço (R$)<input type="number" id="pPreco" required min="0" step="any" placeholder="450000" /></label>
-          <label>Área (m²)<input type="number" id="pArea" min="0" step="1" placeholder="72" /></label>
+          <label>Área (m²)<input type="number" id="pArea" min="0" step="any" placeholder="72" /></label>
           <label>Cidade<input type="text" id="pCidade" placeholder="São Paulo" /></label>
           <label>Bairro<input type="text" id="pBairro" placeholder="Pinheiros" /></label>
           <label>Quartos<input type="number" id="pQuartos" min="0" step="1" value="0" /></label>

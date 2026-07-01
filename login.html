@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex" />
+  <title>Entrar · Horizonte Imóveis</title>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="admin.css" />
+</head>
+<body class="admin">
+  <section class="login-wrap">
+    <form class="login-card" id="loginForm">
+      <div class="brand" style="justify-content:center;margin-bottom:1.2rem">
+        <svg class="logo-mark" width="44" height="44" viewBox="0 0 48 48" aria-hidden="true">
+          <rect width="48" height="48" rx="11" fill="#1f4e79"/>
+          <path d="M13 25 L24 15 L35 25" fill="none" stroke="#d9a441" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M16 24 V34 H32 V24" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <h1>Área do corretor</h1>
+      <p class="login-sub">Entre para gerenciar os imóveis</p>
+      <label>E-mail<input type="email" id="email" required placeholder="corretor@horizonte.com" autocomplete="email" /></label>
+      <label>Senha<input type="password" id="senha" required placeholder="••••••••" autocomplete="current-password" /></label>
+      <button type="submit" class="btn btn-primary" id="loginBtn">Entrar</button>
+      <p class="login-error" id="loginError"></p>
+      <a href="index.html" class="login-back">← Voltar ao site</a>
+    </form>
+  </section>
+  <script type="module" src="login.js"></script>
+</body>
+</html>
