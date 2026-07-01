@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Horizonte Imóveis — encontre casas, apartamentos e imóveis comerciais para comprar ou alugar. Projeto fullstack de demonstração." />
+  <title>Horizonte Imóveis · Comprar e Alugar</title>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="site-header" id="topo">
+    <nav class="nav container">
+      <a href="#topo" class="brand" aria-label="Horizonte Imóveis">
+        <svg class="logo-mark" width="36" height="36" viewBox="0 0 48 48" aria-hidden="true">
+          <rect width="48" height="48" rx="11" fill="#1f4e79"/>
+          <path d="M13 25 L24 15 L35 25" fill="none" stroke="#d9a441" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M16 24 V34 H32 V24" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span class="brand-text"><strong>Horizonte</strong><small>Imóveis</small></span>
+      </a>
+      <button class="nav-toggle" aria-label="Abrir menu" aria-expanded="false"><span></span><span></span><span></span></button>
+      <ul class="nav-links">
+        <li><a href="#imoveis" data-fin="venda">Comprar</a></li>
+        <li><a href="#imoveis" data-fin="aluguel">Alugar</a></li>
+        <li><a href="#sobre">Sobre</a></li>
+        <li><a href="#contato">Contato</a></li>
+        <li><a href="admin.html" class="btn btn-ghost btn-sm">Área do corretor</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="hero-overlay"></div>
+      <div class="container hero-inner">
+        <h1>Encontre o lugar<br />que combina com você</h1>
+        <p class="lead">Casas, apartamentos e imóveis comerciais para comprar ou alugar — com a curadoria da Horizonte Imóveis.</p>
+        <form class="search" id="searchForm">
+          <div class="search-field">
+            <label>Finalidade</label>
+            <select id="fFinalidade">
+              <option value="">Comprar ou alugar</option>
+              <option value="venda">Comprar</option>
+              <option value="aluguel">Alugar</option>
+            </select>
+          </div>
+          <div class="search-field">
+            <label>Tipo</label>
+            <select id="fTipo">
+              <option value="">Todos os tipos</option>
+              <option value="apartamento">Apartamento</option>
+              <option value="casa">Casa</option>
+              <option value="terreno">Terreno</option>
+              <option value="comercial">Comercial</option>
+            </select>
+          </div>
+          <div class="search-field">
+            <label>Cidade</label>
+            <input type="text" id="fCidade" placeholder="Ex: São Paulo" />
+          </div>
+          <div class="search-field">
+            <label>Preço até</label>
+            <input type="number" id="fPreco" placeholder="R$" min="0" step="1000" />
+          </div>
+          <button type="submit" class="btn btn-primary">Buscar</button>
+        </form>
+      </div>
+    </section>
+
+    <section id="imoveis" class="listings">
+      <div class="container">
+        <div class="listings-head">
+          <div>
+            <p class="eyebrow">Imóveis disponíveis</p>
+            <h2 id="resultsTitle">Todos os imóveis</h2>
+          </div>
+          <span id="resultsCount" class="count"></span>
+        </div>
+        <div id="grid" class="grid"><!-- cards via JS --></div>
+        <div id="stateMsg" class="state"></div>
+      </div>
+    </section>
+
+    <section id="sobre" class="about">
+      <div class="container about-inner">
+        <div class="about-media">
+          <img src="https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=800&q=80" alt="Corretora atendendo cliente" loading="lazy" />
+        </div>
+        <div class="about-text">
+          <p class="eyebrow">Sobre nós</p>
+          <h2>Realizando o sonho da casa própria desde 2005</h2>
+          <p>A Horizonte Imóveis conecta pessoas aos lugares certos. Com um time de corretores experientes e um portfólio selecionado, cuidamos de cada etapa — da visita à assinatura do contrato.</p>
+          <ul class="check-list">
+            <li>Curadoria de imóveis verificados</li>
+            <li>Assessoria de financiamento</li>
+            <li>Atendimento humano do início ao fim</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section id="contato" class="contact">
+      <div class="container contact-inner">
+        <div class="contact-text">
+          <p class="eyebrow">Fale com um corretor</p>
+          <h2>Vamos encontrar o seu imóvel</h2>
+          <p>Conte o que você procura e nossa equipe entra em contato com as melhores opções.</p>
+          <ul class="info-lines">
+            <li><strong>Endereço</strong> Av. das Palmeiras, 1200 — Centro</li>
+            <li><strong>Telefone</strong> (11) 4000-0000</li>
+            <li><strong>WhatsApp</strong> (11) 90000-0000</li>
+          </ul>
+        </div>
+        <form class="contact-form" onsubmit="return false;">
+          <label>Nome<input type="text" placeholder="Seu nome" required /></label>
+          <label>Telefone<input type="tel" placeholder="(11) 90000-0000" required /></label>
+          <label>Mensagem<textarea rows="3" placeholder="O que você procura?"></textarea></label>
+          <button type="submit" class="btn btn-primary">Enviar</button>
+          <small>Demonstração · este formulário não envia dados.</small>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span class="brand">
+        <svg class="logo-mark" width="30" height="30" viewBox="0 0 48 48" aria-hidden="true">
+          <rect width="48" height="48" rx="11" fill="#1f4e79"/>
+          <path d="M13 25 L24 15 L35 25" fill="none" stroke="#d9a441" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M16 24 V34 H32 V24" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span class="brand-text"><strong>Horizonte</strong><small>Imóveis</small></span>
+      </span>
+      <p>Av. das Palmeiras, 1200 — Centro · (11) 4000-0000</p>
+      <p class="muted">© <span id="year"></span> Horizonte Imóveis · Projeto fullstack de demonstração.</p>
+    </div>
+  </footer>
+
+  <!-- Modal de detalhes -->
+  <div class="modal" id="detailModal" hidden>
+    <div class="modal-backdrop" data-close></div>
+    <div class="modal-card" role="dialog" aria-modal="true">
+      <button class="modal-close" data-close aria-label="Fechar">×</button>
+      <div id="modalBody"></div>
+    </div>
+  </div>
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>

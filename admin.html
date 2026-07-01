@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex" />
+  <title>Painel · Horizonte Imóveis</title>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="admin.css" />
+</head>
+<body class="admin">
+  <!-- LOGIN -->
+  <section class="login-wrap" id="loginView" hidden>
+    <form class="login-card" id="loginForm">
+      <div class="brand" style="justify-content:center;margin-bottom:1.2rem">
+        <svg class="logo-mark" width="40" height="40" viewBox="0 0 48 48" aria-hidden="true">
+          <rect width="48" height="48" rx="11" fill="#1f4e79"/>
+          <path d="M13 25 L24 15 L35 25" fill="none" stroke="#d9a441" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M16 24 V34 H32 V24" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <h1>Área do corretor</h1>
+      <p class="login-sub">Entre para gerenciar os imóveis</p>
+      <label>E-mail<input type="email" id="email" required placeholder="corretor@horizonte.com" /></label>
+      <label>Senha<input type="password" id="senha" required placeholder="••••••••" /></label>
+      <button type="submit" class="btn btn-primary" id="loginBtn">Entrar</button>
+      <p class="login-error" id="loginError"></p>
+      <a href="index.html" class="login-back">← Voltar ao site</a>
+    </form>
+  </section>
+
+  <!-- PAINEL -->
+  <div id="panelView" hidden>
+    <header class="admin-top">
+      <div class="container admin-top-inner">
+        <a href="index.html" class="brand">
+          <svg class="logo-mark" width="34" height="34" viewBox="0 0 48 48" aria-hidden="true">
+            <rect width="48" height="48" rx="11" fill="#1f4e79"/>
+            <path d="M13 25 L24 15 L35 25" fill="none" stroke="#d9a441" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M16 24 V34 H32 V24" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <span class="brand-text"><strong>Horizonte</strong><small>Painel</small></span>
+        </a>
+        <div class="admin-top-actions">
+          <span class="admin-user" id="whoami"></span>
+          <a href="index.html" class="btn btn-ghost btn-sm">Ver site</a>
+          <button class="btn btn-ghost btn-sm" id="logoutBtn">Sair</button>
+        </div>
+      </div>
+    </header>
+
+    <main class="container admin-main">
+      <div class="admin-head">
+        <div>
+          <h1>Imóveis</h1>
+          <p class="muted" id="adminCount"></p>
+        </div>
+        <button class="btn btn-primary" id="newBtn">+ Novo imóvel</button>
+      </div>
+      <div id="adminList" class="admin-list"></div>
+    </main>
+  </div>
+
+  <!-- FORM (modal) -->
+  <div class="modal" id="formModal" hidden>
+    <div class="modal-backdrop" data-close-form></div>
+    <div class="modal-card admin-form-card" role="dialog" aria-modal="true">
+      <button class="modal-close" data-close-form aria-label="Fechar">×</button>
+      <form id="propForm" class="admin-form">
+        <h2 id="formTitle">Novo imóvel</h2>
+        <input type="hidden" id="pid" />
+        <label class="full">Título<input type="text" id="pTitulo" required placeholder="Ex: Apartamento moderno no Centro" /></label>
+        <div class="form-grid">
+          <label>Finalidade
+            <select id="pFinalidade"><option value="venda">Venda</option><option value="aluguel">Aluguel</option></select>
+          </label>
+          <label>Tipo
+            <select id="pTipo"><option value="apartamento">Apartamento</option><option value="casa">Casa</option><option value="terreno">Terreno</option><option value="comercial">Comercial</option></select>
+          </label>
+          <label>Preço (R$)<input type="number" id="pPreco" required min="0" step="1000" placeholder="450000" /></label>
+          <label>Área (m²)<input type="number" id="pArea" min="0" step="1" placeholder="72" /></label>
+          <label>Cidade<input type="text" id="pCidade" placeholder="São Paulo" /></label>
+          <label>Bairro<input type="text" id="pBairro" placeholder="Pinheiros" /></label>
+          <label>Quartos<input type="number" id="pQuartos" min="0" step="1" value="0" /></label>
+          <label>Banheiros<input type="number" id="pBanheiros" min="0" step="1" value="0" /></label>
+          <label>Vagas<input type="number" id="pVagas" min="0" step="1" value="0" /></label>
+          <label class="chk"><input type="checkbox" id="pDestaque" /> Destaque na home</label>
+        </div>
+        <label class="full">Descrição<textarea id="pDescricao" rows="4" placeholder="Detalhes do imóvel, diferenciais, proximidades…"></textarea></label>
+        <label class="full">Fotos
+          <input type="file" id="pFotos" accept="image/*" multiple />
+          <small class="hint">Você pode selecionar várias. As atuais são mantidas; clique num thumb para remover.</small>
+        </label>
+        <div class="thumbs" id="thumbs"></div>
+        <div class="form-actions">
+          <button type="button" class="btn btn-ghost" data-close-form>Cancelar</button>
+          <button type="submit" class="btn btn-primary" id="saveBtn">Salvar imóvel</button>
+        </div>
+        <p class="form-error" id="formError"></p>
+      </form>
+    </div>
+  </div>
+
+  <div class="toast" id="toast" hidden></div>
+
+  <script type="module" src="admin.js"></script>
+</body>
+</html>
