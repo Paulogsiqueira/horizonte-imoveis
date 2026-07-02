@@ -55,6 +55,13 @@ body.admin { background: var(--bg); }
 .icon-btn.danger:hover { color: #b4232a; border-color: #b4232a; }
 .icon-btn svg { width: 17px; height: 17px; }
 .admin-empty { text-align: center; color: var(--muted); padding: 3rem 1rem; background: var(--surface); border: 1px dashed var(--line); border-radius: 12px; }
+.lock-badge { display: inline-flex; align-items: center; gap: .3rem; font-size: .78rem; font-weight: 600; color: var(--muted); background: var(--bg); border: 1px solid var(--line); border-radius: 999px; padding: .4rem .8rem; white-space: nowrap; }
+
+/* Caixa de credenciais de demonstração (login) */
+.login-demo { margin-top: 1.3rem; background: #eef4fb; border: 1px dashed #b9cee6; border-radius: 12px; padding: .9rem 1rem; text-align: left; }
+.login-demo span { display: block; font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: var(--navy); margin-bottom: .35rem; }
+.login-demo p { font-size: .86rem; color: var(--ink); line-height: 1.5; margin: 0; }
+.login-demo b { font-family: 'Sora', sans-serif; }
 
 /* Form modal */
 .admin-form-card { width: min(720px, 100%); }
