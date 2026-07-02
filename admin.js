@@ -26,6 +26,8 @@ const supa = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 // estado do formulário
 let existingPhotos = [];
 let newFiles = [];
+let currentCount = 0;        // total de imóveis carregados
+const MIN_IMOVEIS = 5;       // a demonstração mantém no mínimo 5 imóveis
 
 // ===== guarda de sessão (redireciona se não logado) =====
 (async () => {
@@ -49,6 +51,7 @@ async function loadList() {
   el('stVenda').textContent = data.filter((p) => p.finalidade === 'venda').length;
   el('stAluguel').textContent = data.filter((p) => p.finalidade === 'aluguel').length;
   el('stDestaque').textContent = data.filter((p) => p.destaque).length;
+  currentCount = data.length;
   el('adminCount').textContent = `${data.length} imóvel(is) cadastrado(s)`;
 
   if (!data.length) { box.innerHTML = '<div class="admin-empty">Nenhum imóvel ainda. Clique em <b>+ Novo imóvel</b> para começar.</div>'; return; }
@@ -71,10 +74,8 @@ function rowHTML(p) {
       </div>
     </div>
     <div class="row-actions">
-      ${p.protegido
-        ? '<span class="lock-badge" title="Imóvel fixo da demonstração — protegido contra edição/exclusão">🔒 Fixo</span>'
-        : `<button class="icon-btn" data-edit="${p.id}" title="Editar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg></button>
-      <button class="icon-btn danger" data-del="${p.id}" title="Excluir"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14"/></svg></button>`}
+      <button class="icon-btn" data-edit="${p.id}" title="Editar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg></button>
+      <button class="icon-btn danger" data-del="${p.id}" title="Excluir"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14"/></svg></button>
     </div>
   </div>`;
 }
@@ -186,6 +187,10 @@ el('propForm').addEventListener('submit', async (e) => {
 
 // ===== excluir =====
 async function remove(p) {
+  if (currentCount <= MIN_IMOVEIS) {
+    toast(`A demonstração mantém no mínimo ${MIN_IMOVEIS} imóveis — exclusão bloqueada.`, true);
+    return;
+  }
   if (!confirm(`Excluir o imóvel "${p.titulo}"? Essa ação não pode ser desfeita.`)) return;
   try {
     const marker = `/storage/v1/object/public/${BUCKET}/`;
